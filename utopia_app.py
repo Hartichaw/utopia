@@ -43,6 +43,8 @@ class UtopiaGame(Widget):
     pass
 class UIWidget(Widget):
     pass
+class MapWidget(Widget):
+	pass
 
 class UtopiaApp(App):
 

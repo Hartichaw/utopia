@@ -1,24 +1,30 @@
 #:kivy 1.11.1
 <UIWidget>:
     Label:
+        Color:
+            rgba: 0, 0, 0, 1
         font_size: 70  
         center_x: root.width / 4
         top: root.top - 50
         text: "0"
- 
-<UtopiaGame>:    
-    canvas:
-        Rectangle:
-            pos: self.center_x - 5, 0
-            size: 10, self.height
-    
-    UIWidget:
-        
+
+<MapWidget>:
     Label:
-        font_size: 70  
+        font_size: 70
         center_x: root.width * 3 / 4
         top: root.top - 50
         text: "0"
+
+<UtopiaGame>:    
+    canvas:
+        Rectangle:
+            pos: 0, 0
+            size: self.width, self.height
+
+    BoxLayout:
+        UIWidget:
+        MapWidget:
+
     
     
         
