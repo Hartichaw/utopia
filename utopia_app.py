@@ -58,18 +58,30 @@ class GameArea(GridLayout):
     def __init__(self, **kwargs):
         super().__init__( **kwargs)
         
-        for i in range(0, 12):
-            button = Room()
+        for i in range(0, 4):
+            button = Cafeteria()
             self.add_widget(button)
+            self.add_widget(Well())
+            self.add_widget(Generator())
             
 class TopBar(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__( **kwargs)
         self.food_count = 0
+        self.water_count = 0
+        self.magic_count = 0
         
     def add_food(self):
         self.food_count += 1
         self.food_lbl.text = "Food = " + str(self.food_count)
+        
+    def add_water(self):
+        self.water_count += 1
+        self.water_lbl.text = "Water = " + str(self.water_count)
+        
+    def add_magic(self):
+        self.magic_count += 1
+        self.magic_lbl.text = "Magic = " + str(self.magic_count)
  
 class UtopiaGame(BoxLayout):
         pass
