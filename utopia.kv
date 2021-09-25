@@ -1,29 +1,46 @@
 #:kivy 1.11.1
-<UIWidget>:
+UtopiaGame:
+<Cafeteria>
+    text: "Food"
+    on_press: root.parent.parent.top_bar.add_food()
+<Well>
+    text: "Water"
+    on_press: root.parent.parent.top_bar.add_water()
+<Generator>
+    text: "Magic"
+    on_press: root.parent.parent.top_bar.add_magic()
+    
+<TopBar@BoxLayout>
+    size_hint: 1, .1
+    orientation: 'horizontal'
+    food_lbl: Food
+    water_lbl: Water
+    magic_lbl: Magic
+    
     Label:
-        Color:
-            rgba: 0, 0, 0, 1
-        font_size: 70  
-        center_x: root.width / 4
-        top: root.top - 50
-        text: "0"
-
-<MapWidget>:
+        id: Food
+        text: "Food = 0"
     Label:
-        font_size: 70
-        center_x: root.width * 3 / 4
-        top: root.top - 50
-        text: "0"
-
-<UtopiaGame>:    
-    canvas:
-        Rectangle:
-            pos: 0, 0
-            size: self.width, self.height
-
-    BoxLayout:
-        UIWidget:
-        MapWidget:
+        id: Water
+        text: "Water = 0"
+    Label:
+        id: Magic
+        text: "Magic = 0"
+        
+<GameArea@GridLayout>
+    cols: 4
+    
+<UtopiaGame@BoxLayout>:  
+    orientation: 'vertical'
+    top_bar:top_bar_id
+    game_area:game_area_id
+    
+    TopBar:
+        id: top_bar_id
+    GameArea:
+        id: game_area_id
+    
+    
 
     
     
