@@ -1,14 +1,18 @@
 #:kivy 1.11.1
 UtopiaGame:
+<Room>
+    canvas:
+        Color:
+            rgb: 0, 1, 0
 <Cafeteria>
     text: "Food"
-    on_press: root.parent.parent.top_bar.add_food()
+    on_press: root.parent.parent.top_bar.add_food(5)
 <Well>
     text: "Water"
-    on_press: root.parent.parent.top_bar.add_water()
+    on_press: root.parent.parent.top_bar.add_water(5)
 <Generator>
     text: "Magic"
-    on_press: root.parent.parent.top_bar.add_magic()
+    on_press: root.parent.parent.top_bar.add_magic(5)
     
 <TopBar@BoxLayout>
     size_hint: 1, .1
@@ -16,6 +20,7 @@ UtopiaGame:
     food_lbl: Food
     water_lbl: Water
     magic_lbl: Magic
+    money_lbl: Money
     
     Label:
         id: Food
@@ -26,19 +31,27 @@ UtopiaGame:
     Label:
         id: Magic
         text: "Magic = 0"
+    Label:
+        id: Money
+        text: "Money = 0"
         
 <GameArea@GridLayout>
+    cols: 4
+<BuildArea@GridLayout>
     cols: 4
     
 <UtopiaGame@BoxLayout>:  
     orientation: 'vertical'
     top_bar:top_bar_id
-    game_area:game_area_id
+    build_area:build_area_id
+    #game_area:game_area_id
     
     TopBar:
         id: top_bar_id
-    GameArea:
-        id: game_area_id
+    BuildArea:
+        id: build_area_id
+#    GameArea:
+#        id: game_area_id
     
     
 
