@@ -6,6 +6,7 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from kivy.graphics import Color
@@ -16,20 +17,54 @@ NAMES =["jean", "hubert", "louis"]
 SEX = ["male", "female", "apache helicopter"]
 RACES = ["human", "orc", "elf"]
 
-class TestWidget(Widget):
-    def on_touch_down(self, touch):
-        if True:
-            self.background_color = (0.0, 1.0, 0.0, 1.0)
-            return True
-        else:
-            return super(MyWidget, self).on_touch_down(touch)
+class room_manager():
+    def __init__(self, room_nb):
+        self.rooms = []      
+        self.room_nb = room_nb
+        for i in range(0, room_nb):
+            self.rooms.append('EmptyRoom')
+            
+    def  set_room(self, room_idx, room_type):
+        self.rooms[room_idx] = room_type
         
-
+    def get_rooms(self):
+        return self.rooms
+    
+    def get_room_nb(self):
+        return self.room_nb
+        
+class RoomSelection(ScrollView):
+    def __init__(self, **kwargs):
+        super().__init__( **kwargs)
+    
 class BuildArea(GridLayout):
     def __init__(self, **kwargs):
         super().__init__( **kwargs)
-        for i in range(12):
-            self.add_widget(TestWidget())
+        self.build_list = []
+        self.manager = room_manager(40)
+        self.update_rooms()
+            
+    def update_rooms(self):
+        self.clear_widgets()
+        room_list = self.manager.get_rooms()
+        for i in range(0, self.manager.get_room_nb() -1):
+            if room_list[i] == 'EmptyRoom':
+                self.add_widget(EmptyRoom(i))
+            if room_list[i] == "Cafeteria":
+                self.add_widget(Cafeteria(i))
+            if room_list[i] == "Well":
+                self.add_widget(Well(i))
+            if room_list[i] == "Generator":
+                self.add_widget(Generator(i))  
+        
+    def build(self, room_type):
+            self.clear_widgets()
+            for idx in self.build_list:
+                self.manager.set_room(idx, room_type)
+            self.update_rooms()     
+            self.build_list = []
+                    
+            
 
 #===========		
 class settler():
@@ -59,12 +94,31 @@ class colonScreen(GridLayout):
 
  	   	for i in range(0, len(colony)-1):
  	   		self.add_widget(Label(text=repr(colony[i])))	   			 
- 	   		
+  	   		
+class EmptyRoom(Button):
+    def __init__(self, coord_room, **kwargs):
+        super(EmptyRoom, self).__init__(**kwargs)
+        #self.background_color = (0.0, 0.0, 1.0, 1.0)
+        self.default_background = self.background_color
+        self.coord_room = coord_room
+        self.selected = False
+    def on_press(self):
+        if self.selected:
+            self.selected = False
+            self.parent.build_list.remove(self.coord_room)
+            self.background_color = self.default_background
+        else:
+            self.selected = True
+            self.parent.build_list.append(self.coord_room)
+            self.background_color = (0.0, 0.0, 1.0, 1.0)
+        	   		
 class Room(Button):
-    def __init__(self, **kwargs):
+    def __init__(self, coord_room, **kwargs):
         super(Room, self).__init__(**kwargs)
         self.locked = False
         self.background_color = (0.0, 1.0, 0.0, 1.0)
+        self.coord_room = coord_room
+        
     def on_press(self):
         if not self.locked:
             self.lock_room()
@@ -79,35 +133,19 @@ class Room(Button):
           self.background_color = (0.0, 1.0, 0.0, 1.0) 	   			
  	   					
 class Cafeteria(Room):
-    def __init__(self, **kwargs):
-        super(Cafeteria, self).__init__(**kwargs)
+    def __init__(self, coord_room, **kwargs):
+        super(Cafeteria, self).__init__(coord_room, **kwargs)
 class Well(Room):
-    def __init__(self, **kwargs):
-        super(Well, self).__init__(**kwargs)
+    def __init__(self, coord_room, **kwargs):
+        super(Well, self).__init__(coord_room, **kwargs)
 class Generator(Room):
-    def __init__(self, **kwargs):
-        super(Generator, self).__init__(**kwargs)
-                      		
-class deprecated_Room(Button):
-        def __init__(self, **kwargs):
-            super().__init__( **kwargs)
-            self.count = 0
-        
-        def add_count(self):
-             self.count += 1
-             self.text= str(self.count)
-        		   		
-class GameArea(GridLayout):
-    def __init__(self, **kwargs):
-        super().__init__( **kwargs)
-        for i in range(0, 4):
-            self.add_widget(Cafeteria())
-            self.add_widget(Well())
-            self.add_widget(Generator())
+    def __init__(self, coord_room, **kwargs):
+        super(Generator, self).__init__(coord_room, **kwargs)
+                      	
             
-class BuildArea(GridLayout):
-    def __init__(self, **kwargs):
-        super().__init__( **kwargs)        
+#class BuildArea(ScrollView):
+#    def __init__(self, **kwargs):
+ #       super().__init__( **kwargs)        
         
 class TopBar(BoxLayout):
     def __init__(self, **kwargs):
@@ -138,7 +176,6 @@ class UtopiaGame(BoxLayout):
 class UtopiaApp(App):
         
         colony = []
-        layout = GridLayout(cols=3)
         for i in range(0, 7):
         	settler_c = settler()
         	settler_c.randomize_infos()
